@@ -1,0 +1,6 @@
+{
+  "skill": "bybit-news-trading",
+  "version": "1.0.0",
+  "description": "Day trading based on news events, social media sentiment, and market-moving announcements. Analyze news sentiment to find entry points.",
+  "entry": "SKILL.md"
+}
