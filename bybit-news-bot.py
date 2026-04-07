@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-Bybit News Trading Bot v1.0
-Scans news sources to find market-moving events and identifies trading opportunities
+Bybit News Trading Bot v1.2 - COMMODITY FOCUS
+Scans major news sources for gold, oil, and commodity news, then trades XAUUSDT, XAGUSDT, GASUSDT autonomously
 """
 
 import asyncio
@@ -11,45 +11,47 @@ import sys
 from datetime import datetime
 from pathlib import Path
 
-# Add parent to path
-sys.path.insert(0, str(Path(__file__).parent))
-
-# News sources to scan
+# News sources
 NEWS_SOURCES = [
-    {"name": "Reuters Markets", "url": "https://www.reuters.com/markets/us"},
-    {"name": "CoinDesk", "url": "https://www.coindesk.com"},
-    {"name": "Yahoo Finance Crypto", "url": "https://finance.yahoo.com/crypto"},
     {"name": "BBC Business", "url": "https://www.bbc.com/news/business"},
+    {"name": "CNBC", "url": "https://www.cnbc.com/investing/"},
+    {"name": "Yahoo Finance", "url": "https://finance.yahoo.com/topic/markets/"},
 ]
 
-# Keywords by sentiment
+# Focus pairs
+TRADING_PAIRS = ["XAUUSDT", "XAGUSDT", "GASUSDT"]
+
+# Keywords - use word boundaries for accuracy
+GOLD_KEYWORDS = [
+    "gold", "xau", "bullion", "goldman sachs gold", "gold price", "gold up", "gold down",
+    "gold surge", "gold falls", "gold rally", "gold gains", "gold losses",
+    "safe haven", "gold etf"
+]
+
+SILVER_KEYWORDS = [
+    "silver", "xag", "silver price", "silver up", "silver down", "silver surge"
+]
+
+OIL_KEYWORDS = [
+    "oil", "opec", "crude", "wti", "brent", "petroleum", "energy", "natural gas",
+    "iran", "straits", "hormuz", "oil price", "oil up", "oil down",
+    "oil surge", "oil plunges", "oil spike", "fuel"
+]
+
 BULLISH_KEYWORDS = [
-    "etf approval", "bullish", "all-time high", "record high", 
-    "cryptocurrency friendly", "rate cut", "stimulus",
-    "innovation", "adoption", "institutional", "breakout"
+    "up", "surge", "rally", "gains", "soars", "hits record", "breakout", 
+    "bullish", "higher", "rises", "climbs", "best", "growing", "growth"
 ]
 
 BEARISH_KEYWORDS = [
-    "rate hike", "inflation", "recession", "crackdown", "ban",
-    "bearish", "all-time low", "selloff", "regulation", 
-    "restrictions", "china ban", "sec lawsuit"
+    "down", "falls", "drops", "plunges", "tumbles", "slumps", "declines",
+    "bearish", "lower", "selloff", "worst", "recession", "fears", "crash"
 ]
-
-# News category to trading pairs mapping
-CATEGORY_PAIRS = {
-    "fed_rates": ["BTCUSDT", "ETHUSDT", "XAUUSDT"],
-    "president_political": ["BTCUSDT", "ETHUSDT", "USDTUSDC"],
-    "crypto_regulation": ["BTCUSDT", "ETHUSDT", "USDCUSDT"],
-    "tech_ai": ["SOLUSDT", "AVAXUSDT", "BTCUSDT"],
-    "elon_musk": ["DOGEUSDT", "BTCUSDT"],
-    "china_ban": ["BTCUSDT", "ETHUSDT", "USDTUSDC"],
-    "economic": ["BTCUSDT", "XAUUSDT", "USDTUSDC"],
-}
 
 
 def analyze_sentiment(text):
     """Analyze news text for sentiment"""
-    text_lower = text.lower()
+    text_lower = " " + text.lower() + " "
     
     bullish_count = sum(1 for kw in BULLISH_KEYWORDS if kw in text_lower)
     bearish_count = sum(1 for kw in BEARISH_KEYWORDS if kw in text_lower)
@@ -62,43 +64,35 @@ def analyze_sentiment(text):
         return "NEUTRAL", 0
 
 
-def identify_category(text):
-    """Identify which category the news falls into"""
-    text_lower = text.lower()
+def identify_commodity(text):
+    """Identify which commodity the news is about"""
+    text_lower = " " + text.lower() + " "
     
-    if any(w in text_lower for w in ["fed", "federal reserve", "interest rate", "fomc", "powell"]):
-        return "fed_rates"
-    if any(w in text_lower for w in ["trump", "president", "white house", "congress"]):
-        return "president_political"
-    if any(w in text_lower for w in ["sec", "etf", "approval", "regulation", "crypto law"]):
-        return "crypto_regulation"
-    if any(w in text_lower for w in ["nvidia", "ai", "tech", "earnings", "breakthrough"]):
-        return "tech_ai"
-    if any(w in text_lower for w in ["elon", "musk", "doge"]):
-        return "elon_musk"
-    if any(w in text_lower for w in ["china", "ban", "crackdown"]):
-        return "china_ban"
-    if any(w in text_lower for w in ["gdp", "cpi", "jobs", "unemployment", "economy"]):
-        return "economic"
+    for kw in OIL_KEYWORDS:
+        if kw in text_lower:
+            return "oil"
+    for kw in GOLD_KEYWORDS:
+        if kw in text_lower:
+            return "gold"
+    for kw in SILVER_KEYWORDS:
+        if kw in text_lower:
+            return "silver"
     
-    return "general"
+    return None
 
 
-def get_affected_pairs(category):
-    """Get trading pairs affected by this news category"""
-    return CATEGORY_PAIRS.get(category, ["BTCUSDT", "ETHUSDT"])
+def get_pairs_for_commodity(commodity):
+    """Get trading pairs for the commodity"""
+    mapping = {
+        "gold": ["XAUUSDT"],
+        "silver": ["XAGUSDT"],
+        "oil": ["GASUSDT"],
+    }
+    return mapping.get(commodity, ["XAUUSDT"])
 
 
-def load_env():
-    """Load Bybit API credentials from environment or file"""
-    # Try environment first
-    api_key = os.getenv("BYBIT_API_KEY")
-    api_secret = os.getenv("BYBIT_API_SECRET")
-    
-    if api_key and api_secret:
-        return api_key, api_secret
-    
-    # Try to load from credentials file
+def load_credentials():
+    """Load Bybit API credentials"""
     creds_file = Path.home() / "OneDrive" / "Pictures" / "auto_opener_monitor" / "crypto_trader" / "credentials.json"
     
     if creds_file.exists():
@@ -110,8 +104,8 @@ def load_env():
 
 
 async def fetch_news():
-    """Fetch news from all sources"""
-    print(f"\n=== NEWS SCANNER: {datetime.now().strftime('%Y-%m-%d %H:%M')} ===\n")
+    """Fetch news from sources"""
+    print("\n=== NEWS SCANNER: {} ===".format(datetime.now().strftime('%Y-%m-%d %H:%M')))
     
     news_items = []
     
@@ -119,178 +113,248 @@ async def fetch_news():
         try:
             import requests
             
-            headers = {
-                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
-            }
-            
+            headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'}
             response = requests.get(source["url"], headers=headers, timeout=10)
             
             if response.status_code == 200:
-                print(f"✓ {source['name']}: Fetched {len(response.text)} chars")
+                print("[OK] {}: {} chars".format(source['name'], len(response.text)))
                 
-                # Extract headlines (simple approach)
                 from bs4 import BeautifulSoup
                 soup = BeautifulSoup(response.text, 'html.parser')
                 
-                # Look for headlines
                 headlines = []
                 for h in soup.find_all(['h2', 'h3', 'a']):
                     text = h.get_text(strip=True)
-                    if 20 < len(text) < 200:  # Reasonable headline length
+                    if 30 < len(text) < 200:
                         headlines.append(text)
                 
-                # Take first 5
-                for headline in headlines[:5]:
+                for headline in headlines[:10]:
                     news_items.append({
                         "source": source["name"],
-                        "headline": headline,
-                        "url": source["url"]
+                        "headline": headline
                     })
                     
         except Exception as e:
-            print(f"✗ {source['name']}: {e}")
+            print("[X] {}: {}".format(source['name'], e))
     
     return news_items
 
 
 def analyze_news(news_items):
-    """Analyze news for sentiment and trading opportunities"""
-    print("\n=== SENTIMENT ANALYSIS ===\n")
+    """Analyze news for commodity sentiment"""
+    print("\n=== COMMODITY ANALYSIS ===")
     
     opportunities = []
     
     for item in news_items:
         headline = item["headline"]
         
-        # Analyze
+        # Skip if too short
+        if len(headline) < 30:
+            continue
+        
+        commodity = identify_commodity(headline)
+        if not commodity:
+            continue
+            
         sentiment, strength = analyze_sentiment(headline)
-        category = identify_category(headline)
-        pairs = get_affected_pairs(category)
         
         if sentiment != "NEUTRAL":
+            pairs = get_pairs_for_commodity(commodity)
+            
             opportunities.append({
                 "source": item["source"],
                 "headline": headline,
                 "sentiment": sentiment,
                 "strength": strength,
-                "category": category,
-                "affected_pairs": pairs
+                "commodity": commodity,
+                "pairs": pairs
             })
             
-            print(f"[{sentiment}] {item['source']}")
-            print(f"  {headline[:100]}...")
-            print(f"  → {', '.join(pairs)}\n")
+            direction = ">>> BUY" if sentiment == "BULLISH" else "<<< SELL"
+            print("\n[{}] {} - {}".format(sentiment, commodity.upper(), direction))
+            print("  {}".format(headline[:100]))
+            print("  -> Trade: {}".format(", ".join(pairs)))
     
     return opportunities
 
 
-async def get_market_prices(pairs):
-    """Get current prices for affected pairs"""
-    api_key, api_secret = load_env()
-    
-    if not api_key:
-        print("⚠ No API credentials found")
-        return {}
-    
+async def get_prices(pairs):
+    """Get current prices for pairs"""
     try:
         import requests
         
-        url = "https://api.bybit.com/v5/market/tickers"
-        params = {"category": "spot", "symbol": ",".join(pairs[:5])}  # Limit to 5
+        prices = {}
         
-        response = requests.get(url, params=params, timeout=10)
-        
-        if response.status_code == 200:
+        # Get each pair individually
+        for pair in pairs:
+            url = "https://api.bybit.com/v5/market/tickers"
+            params = {"category": "linear", "symbol": pair}
+            
+            response = requests.get(url, params=params, timeout=10)
             data = response.json()
             
-            if data.get("retCode") == 0:
-                prices = {}
-                for item in data.get("result", {}).get("list", []):
-                    prices[item["symbol"]] = float(item["lastPrice"])
-                return prices
+            if data.get("retCode") == 0 and data.get("result", {}).get("list"):
+                item = data["result"]["list"][0]
+                prices[item["symbol"]] = {
+                    "price": float(item["lastPrice"]),
+                    "24h_change": float(item.get("price24hPcnt", 0)) * 100
+                }
+    except Exception as e:
+        print("Price error: {}".format(e))
+    
+    return prices
+
+
+async def execute_trade(pair, direction, size_percent=10):
+    """Execute a trade on Bybit"""
+    api_key, api_secret = load_credentials()
+    
+    if not api_key:
+        print("[ERROR] No API credentials!")
+        return False
+    
+    try:
+        import requests
+        import time
+        import hmac
+        import hashlib
+        
+        # Get current price
+        r = requests.get("https://api.bybit.com/v5/market/tickers", 
+                        params={"category": "linear", "symbol": pair}, timeout=10)
+        data = r.json()
+        
+        if data.get("retCode") != 0:
+            print("[ERROR] Could not get price for {}".format(pair))
+            return False
+        
+        price = float(data["result"]["list"][0]["lastPrice"])
+        
+        # Calculate position size (percentage of balance)
+        balance = 450  # Assume ~$450 USDT
+        qty = (balance * size_percent / 100) / price
+        qty = round(qty, 2)
+        
+        if qty < 0.01:
+            qty = 0.01
+        
+        # Prepare order
+        side = "Buy" if direction == "BULLISH" else "Sell"
+        
+        # Sign request
+        timestamp = str(int(time.time() * 1000))
+        recv_window = "5000"
+        
+        params_str = "category=linear&symbol={}&side={}&orderType=Market&qty={}".format(
+            pair, side, qty)
+        
+        signature = hmac.new(
+            api_secret.encode(),
+            (timestamp + api_key + recv_window + params_str).encode(),
+            hashlib.sha256
+        ).hexdigest()
+        
+        headers = {
+            "X-BAPI-API-KEY": api_key,
+            "X-BAPI-SIGN": signature,
+            "X-BAPI-SIGN-TYPE": "2",
+            "X-BAPI-TIMESTAMP": timestamp,
+            "X-BAPI-RECV-WINDOW": recv_window,
+            "Content-Type": "application/json"
+        }
+        
+        # Place order
+        order_url = "https://api.bybit.com/v5/order/create"
+        order_data = {
+            "category": "linear",
+            "symbol": pair,
+            "side": side,
+            "orderType": "Market",
+            "qty": str(qty)
+        }
+        
+        response = requests.post(order_url, json=order_data, headers=headers, timeout=10)
+        result = response.json()
+        
+        if result.get("retCode") == 0:
+            print("[EXECUTE] {} {} {} at ${}".format(side, qty, pair, price))
+            return True
+        else:
+            print("[ERROR] Order failed: {}".format(result.get("retMsg")))
+            return False
                 
     except Exception as e:
-        print(f"⚠ Error fetching prices: {e}")
-    
-    return {}
-
-
-def generate_recommendations(opportunities, prices):
-    """Generate trading recommendations based on news and prices"""
-    print("\n=== TRADING RECOMMENDATIONS ===\n")
-    
-    recommendations = []
-    
-    for opp in opportunities:
-        for pair in opp["affected_pairs"]:
-            price = prices.get(pair, "N/A")
-            
-            rec = {
-                "pair": pair,
-                "action": "BUY" if opp["sentiment"] == "BULLISH" else "SELL",
-                "reason": f"News: {opp['headline'][:50]}...",
-                "sentiment": opp["sentiment"],
-                "price": price
-            }
-            recommendations.append(rec)
-            
-            direction = "🟢 LONG" if opp["sentiment"] == "BULLISH" else "🔴 SHORT"
-            print(f"{direction} {pair} @ {price}")
-            print(f"  Reason: {opp['headline'][:80]}")
-            print()
-    
-    return recommendations
+        print("[ERROR] Trade failed: {}".format(e))
+        return False
 
 
 async def main():
     """Main news trading bot"""
-    print("🔍 BYBIT NEWS TRADING BOT v1.0\n")
+    print("\n" + "="*50)
+    print("BYBIT NEWS TRADING BOT v1.2 - COMMODITY FOCUS")
+    print("Pairs: XAUUSDT, XAGUSDT, GASUSDT")
+    print("="*50)
     
     # Step 1: Fetch news
     news_items = await fetch_news()
     
     if not news_items:
-        print("No news found, checking again later...")
+        print("No news found")
         return
     
-    # Step 2: Analyze sentiment
+    # Step 2: Analyze for commodities
     opportunities = analyze_news(news_items)
     
     if not opportunities:
-        print("No significant news found")
+        print("\n[INFO] No significant commodity news found")
         return
     
-    # Step 3: Get affected pairs
-    all_pairs = []
+    # Step 3: Get prices
+    prices = await get_prices(TRADING_PAIRS)
+    
+    print("\n=== CURRENT PRICES ===")
+    for pair in TRADING_PAIRS:
+        if pair in prices:
+            change = prices[pair].get("24h_change", 0)
+            print("{}: ${} ({}%)".format(pair, prices[pair]["price"], change))
+        else:
+            print("{}: Not available".format(pair))
+    
+    # Step 4: Execute trades
+    print("\n=== EXECUTING TRADES ===")
+    
+    trades = []
     for opp in opportunities:
-        all_pairs.extend(opp["affected_pairs"])
-    all_pairs = list(set(all_pairs))[:10]  # Dedupe, max 10
+        for pair in opp["pairs"]:
+            if pair in prices:
+                trades.append({
+                    "pair": pair,
+                    "direction": opp["sentiment"],
+                    "price": prices[pair]["price"],
+                    "commodity": opp["commodity"],
+                    "reason": opp["headline"][:60]
+                })
+                
+                action = "LONG" if opp["sentiment"] == "BULLISH" else "SHORT"
+                print("\n{} {} @ ${}".format(action, pair, prices[pair]["price"]))
+                print("  Reason: {}...".format(opp["headline"][:60]))
+                
+                # Execute trade
+                await execute_trade(pair, opp["sentiment"], size_percent=10)
     
-    # Step 4: Get current prices
-    prices = await get_market_prices(all_pairs)
-    
-    # Step 5: Generate recommendations
-    recommendations = generate_recommendations(opportunities, prices)
-    
-    # Save to file for cron job
+    # Save signals
     output = {
         "timestamp": datetime.now().isoformat(),
-        "opportunities": opportunities,
-        "recommendations": recommendations,
-        "prices": prices
+        "trades": trades,
+        "prices": {k: v["price"] for k, v in prices.items()}
     }
     
     output_file = Path(__file__).parent / "news_signals.json"
     with open(output_file, "w") as f:
         json.dump(output, f, indent=2)
     
-    print(f"\n✓ Saved {len(recommendations)} recommendations to news_signals.json")
-    
-    # Summary
-    bullish_count = sum(1 for r in recommendations if r["action"] == "BUY")
-    bearish_count = sum(1 for r in recommendations if r["action"] == "SELL")
-    
-    print(f"\n📊 Summary: {bullish_count} bullish, {bearish_count} bearish opportunities")
+    print("\n[Saved] {} trade opportunities to news_signals.json".format(len(trades)))
 
 
 if __name__ == "__main__":

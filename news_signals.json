@@ -1,0 +1,17 @@
+{
+  "timestamp": "2026-04-07T08:13:51.114311",
+  "trades": [
+    {
+      "pair": "GASUSDT",
+      "direction": "BULLISH",
+      "price": 1.6377,
+      "commodity": "oil",
+      "reason": "India's high-growth economy gets a Middle East oil shockIndi"
+    }
+  ],
+  "prices": {
+    "XAUUSDT": 4655.62,
+    "XAGUSDT": 72.1,
+    "GASUSDT": 1.6377
+  }
+}
