@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Bybit News Trading Bot v1.2 - COMMODITY FOCUS
+Bybit News Trading Bot v1.3 - COMMODITY FOCUS (CCXT)
 Scans major news sources for gold, oil, and commodity news, then trades XAUUSDT, XAGUSDT, GASUSDT autonomously
 """
 
@@ -59,7 +59,7 @@ def analyze_sentiment(text):
     if bullish_count > bearish_count:
         return "BULLISH", bullish_count - bearish_count
     elif bearish_count > bullish_count:
-        return "BEARISH", bearish_count - bullish_count
+        return "BEARISH", bearish_count - bearish_count
     else:
         return "NEUTRAL", 0
 
@@ -93,6 +93,16 @@ def get_pairs_for_commodity(commodity):
 
 def load_credentials():
     """Load Bybit API credentials"""
+    # First check skill folder
+    skill_path = Path(__file__).parent
+    creds_file = skill_path / "credentials.json"
+    
+    if creds_file.exists():
+        with open(creds_file) as f:
+            data = json.load(f)
+            return data.get("api_key"), data.get("api_secret")
+    
+    # Then check OneDrive folder
     creds_file = Path.home() / "OneDrive" / "Pictures" / "auto_opener_monitor" / "crypto_trader" / "credentials.json"
     
     if creds_file.exists():
@@ -101,6 +111,21 @@ def load_credentials():
             return data.get("api_key"), data.get("api_secret")
     
     return None, None
+
+
+def get_bybit_session():
+    """Get ccxt Bybit session"""
+    api_key, api_secret = load_credentials()
+    
+    if not api_key:
+        return None
+    
+    import ccxt
+    return ccxt.bybit({
+        'apiKey': api_key,
+        'secret': api_secret,
+        'enableRateLimit': True,
+    })
 
 
 async def fetch_news():
@@ -180,26 +205,22 @@ def analyze_news(news_items):
 
 
 async def get_prices(pairs):
-    """Get current prices for pairs"""
+    """Get current prices for pairs using ccxt"""
+    prices = {}
+    
     try:
-        import requests
+        bybit = get_bybit_session()
         
-        prices = {}
-        
-        # Get each pair individually
         for pair in pairs:
-            url = "https://api.bybit.com/v5/market/tickers"
-            params = {"category": "linear", "symbol": pair}
-            
-            response = requests.get(url, params=params, timeout=10)
-            data = response.json()
-            
-            if data.get("retCode") == 0 and data.get("result", {}).get("list"):
-                item = data["result"]["list"][0]
-                prices[item["symbol"]] = {
-                    "price": float(item["lastPrice"]),
-                    "24h_change": float(item.get("price24hPcnt", 0)) * 100
+            try:
+                ticker = bybit.fetch_ticker(pair)
+                prices[pair] = {
+                    "price": ticker['last'],
+                    "24h_change": ticker['percentage']
                 }
+            except Exception as e:
+                print("[ERROR] {}: {}".format(pair, e))
+                
     except Exception as e:
         print("Price error: {}".format(e))
     
@@ -207,81 +228,56 @@ async def get_prices(pairs):
 
 
 async def execute_trade(pair, direction, size_percent=10):
-    """Execute a trade on Bybit"""
-    api_key, api_secret = load_credentials()
-    
-    if not api_key:
-        print("[ERROR] No API credentials!")
-        return False
-    
+    """Execute a trade on Bybit using ccxt"""
     try:
-        import requests
-        import time
-        import hmac
-        import hashlib
+        bybit = get_bybit_session()
         
-        # Get current price
-        r = requests.get("https://api.bybit.com/v5/market/tickers", 
-                        params={"category": "linear", "symbol": pair}, timeout=10)
-        data = r.json()
-        
-        if data.get("retCode") != 0:
-            print("[ERROR] Could not get price for {}".format(pair))
+        if not bybit:
+            print("[ERROR] No API credentials!")
             return False
         
-        price = float(data["result"]["list"][0]["lastPrice"])
+        # Get current price and calculate qty
+        ticker = bybit.fetch_ticker(pair)
+        price = ticker['last']
         
-        # Calculate position size (percentage of balance)
-        balance = 450  # Assume ~$450 USDT
-        qty = (balance * size_percent / 100) / price
-        qty = round(qty, 2)
+        # Get balance
+        try:
+            balance = bybit.fetch_balance()
+            usdt_balance = balance['total'].get('USDT', 0)
+        except:
+            usdt_balance = 450  # Default
+        
+        # Calculate qty (10% of balance)
+        qty = (usdt_balance * size_percent / 100) / price
+        
+        # Round appropriately for each pair
+        if pair == 'XAUUSDT':
+            qty = round(qty, 3)  # Gold uses 3 decimals
+        else:
+            qty = round(qty, 2)
         
         if qty < 0.01:
             qty = 0.01
         
-        # Prepare order
-        side = "Buy" if direction == "BULLISH" else "Sell"
-        
-        # Sign request
-        timestamp = str(int(time.time() * 1000))
-        recv_window = "5000"
-        
-        params_str = "category=linear&symbol={}&side={}&orderType=Market&qty={}".format(
-            pair, side, qty)
-        
-        signature = hmac.new(
-            api_secret.encode(),
-            (timestamp + api_key + recv_window + params_str).encode(),
-            hashlib.sha256
-        ).hexdigest()
-        
-        headers = {
-            "X-BAPI-API-KEY": api_key,
-            "X-BAPI-SIGN": signature,
-            "X-BAPI-SIGN-TYPE": "2",
-            "X-BAPI-TIMESTAMP": timestamp,
-            "X-BAPI-RECV-WINDOW": recv_window,
-            "Content-Type": "application/json"
-        }
-        
         # Place order
-        order_url = "https://api.bybit.com/v5/order/create"
-        order_data = {
-            "category": "linear",
-            "symbol": pair,
-            "side": side,
-            "orderType": "Market",
-            "qty": str(qty)
-        }
+        side = 'buy' if direction == 'BULLISH' else 'sell'
         
-        response = requests.post(order_url, json=order_data, headers=headers, timeout=10)
-        result = response.json()
+        print("[ORDER] {} {} {} @ ${}".format(side.upper(), qty, pair, price))
         
-        if result.get("retCode") == 0:
-            print("[EXECUTE] {} {} {} at ${}".format(side, qty, pair, price))
+        try:
+            order = bybit.create_order(
+                symbol=pair,
+                type='market',
+                side=side,
+                amount=qty,
+                params={
+                    'positionIdx': 0,  # One-way mode
+                }
+            )
+            print("[EXECUTE] Order placed: {}".format(order['id']))
             return True
-        else:
-            print("[ERROR] Order failed: {}".format(result.get("retMsg")))
+        except Exception as e:
+            print("[ERROR] Order failed: {}".format(str(e)[:100]))
             return False
                 
     except Exception as e:
@@ -292,7 +288,7 @@ async def execute_trade(pair, direction, size_percent=10):
 async def main():
     """Main news trading bot"""
     print("\n" + "="*50)
-    print("BYBIT NEWS TRADING BOT v1.2 - COMMODITY FOCUS")
+    print("BYBIT NEWS TRADING BOT v1.3 - COMMODITY FOCUS")
     print("Pairs: XAUUSDT, XAGUSDT, GASUSDT")
     print("="*50)
     
@@ -317,7 +313,7 @@ async def main():
     for pair in TRADING_PAIRS:
         if pair in prices:
             change = prices[pair].get("24h_change", 0)
-            print("{}: ${} ({}%)".format(pair, prices[pair]["price"], change))
+            print("{}: ${} ({}%)".format(pair, prices[pair]["price"], round(change, 2)))
         else:
             print("{}: Not available".format(pair))
     
