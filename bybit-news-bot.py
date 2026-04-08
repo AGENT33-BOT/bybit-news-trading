@@ -1,7 +1,12 @@
 #!/usr/bin/env python3
 """
-Bybit News Trading Bot v1.3 - COMMODITY FOCUS (CCXT)
+Bybit News Trading Bot v1.4 - COMMODITY FOCUS (CCXT)
 Scans major news sources for gold, oil, and commodity news, then trades XAUUSDT, XAGUSDT, GASUSDT autonomously
+
+UPDATES v1.4:
+- MAX 30% POSITION SIZE per trade
+- RSI FILTER (only enter when RSI < 35 or > 65)
+- Position size limits based on account balance
 """
 
 import asyncio
@@ -228,7 +233,7 @@ async def get_prices(pairs):
 
 
 async def execute_trade(pair, direction, size_percent=10):
-    """Execute a trade on Bybit using ccxt"""
+    """Execute a trade on Bybit using ccxt - v1.4 with position limits"""
     try:
         bybit = get_bybit_session()
         
@@ -247,8 +252,15 @@ async def execute_trade(pair, direction, size_percent=10):
         except:
             usdt_balance = 450  # Default
         
-        # Calculate qty (10% of balance)
+        # v1.4: MAX 30% per trade
+        max_position = usdt_balance * 0.30  # 30% max
+        
+        # Calculate qty (default 10%, but capped at 30%)
         qty = (usdt_balance * size_percent / 100) / price
+        
+        # Ensure we don't exceed 30%
+        max_qty = max_position / price
+        qty = min(qty, max_qty)
         
         # Round appropriately for each pair
         if pair == 'XAUUSDT':
@@ -259,10 +271,24 @@ async def execute_trade(pair, direction, size_percent=10):
         if qty < 0.01:
             qty = 0.01
         
+        # v1.4: Check RSI before trading
+        try:
+            rsi = await get_rsi(pair)
+            print("[RSI CHECK] {} RSI: {}".format(pair, rsi))
+            
+            if direction == 'BULLISH' and rsi and rsi > 35:
+                print("[SKIP] {} not oversold (RSI={}). Wait for dip.".format(pair, rsi))
+                return False
+            elif direction == 'BEARISH' and rsi and rsi < 65:
+                print("[SKIP] {} not overbought (RSI={}). Wait for rally.".format(pair, rsi))
+                return False
+        except:
+            pass  # Continue if RSI check fails
+        
         # Place order
         side = 'buy' if direction == 'BULLISH' else 'sell'
         
-        print("[ORDER] {} {} {} @ ${}".format(side.upper(), qty, pair, price))
+        print("[ORDER] {} {} {} @ ${} (${} of ${})".format(side.upper(), qty, pair, price, qty*price, usdt_balance))
         
         try:
             order = bybit.create_order(
@@ -283,6 +309,43 @@ async def execute_trade(pair, direction, size_percent=10):
     except Exception as e:
         print("[ERROR] Trade failed: {}".format(e))
         return False
+
+
+async def get_rsi(symbol, timeframe='1h', period=14):
+    """Get RSI for a symbol using ccxt"""
+    try:
+        bybit = get_bybit_session()
+        ohlcv = bybit.fetch_ohlcv(symbol, timeframe, limit=period+1)
+        
+        if not ohlcv or len(ohlcv) < period + 1:
+            return None
+        
+        # Calculate RSI
+        gains = []
+        losses = []
+        
+        for i in range(1, len(ohlcv)):
+            change = ohlcv[i][4] - ohlcv[i-1][4]  # close - open
+            if change > 0:
+                gains.append(change)
+                losses.append(0)
+            else:
+                gains.append(0)
+                losses.append(abs(change))
+        
+        avg_gain = sum(gains[-period:]) / period
+        avg_loss = sum(losses[-period:]) / period
+        
+        if avg_loss == 0:
+            return 100
+        
+        rs = avg_gain / avg_loss
+        rsi = 100 - (100 / (1 + rs))
+        
+        return round(rsi, 2)
+    except Exception as e:
+        print("[RSI ERROR] {}: {}".format(symbol, e))
+        return None
 
 
 async def main():
