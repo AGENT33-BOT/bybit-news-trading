@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Bybit News Trading Bot v1.4 - COMMODITY FOCUS (CCXT)
+Bybit News Trading Bot v1.6 - COMMODITY + CRYPTO FOCUS
 Scans major news sources for gold, oil, and commodity news, then trades XAUUSDT, XAGUSDT, GASUSDT autonomously
 
 UPDATES v1.4:
@@ -24,8 +24,29 @@ NEWS_SOURCES = [
     {"name": "Yahoo Finance", "url": "https://finance.yahoo.com/topic/markets/"},
 ]
 
-# Focus pairs
-TRADING_PAIRS = ["XAUUSDT", "XAGUSDT", "GASUSDT"]
+# Focus pairs - EXPANDED for OIL & GOLD & COMMODITIES
+TRADING_PAIRS = [
+    # Gold
+    "XAUUSDT",   # Gold/USDT
+    "XAUTUSDT",  # Gold Tether
+    # Silver
+    "XAGUSDT",   # Silver/USDT
+    # Oil/Natural Gas
+    "GASUSDT",   # Natural Gas
+    # Energy/Crypto related
+    "BTCUSDT",   # Bitcoin (gold of crypto)
+    "ETHUSDT",   # Ethereum
+]
+
+# Commodity to pair mapping
+COMMODITY_PAIRS = {
+    "gold": ["XAUUSDT", "XAUTUSDT"],
+    "silver": ["XAGUSDT"],
+    "oil": ["GASUSDT"],
+    "natural gas": ["GASUSDT"],
+    "bitcoin": ["BTCUSDT"],
+    "crypto": ["BTCUSDT", "ETHUSDT"],
+}
 
 # Keywords - EXPANDED for OIL & GOLD
 GOLD_KEYWORDS = [
@@ -96,6 +117,9 @@ def identify_commodity(text):
     for kw in SILVER_KEYWORDS:
         if kw in text_lower:
             return "silver"
+    for kw in CRYPTO_KEYWORDS:
+        if kw in text_lower:
+            return "crypto"
     
     return None
 
@@ -103,11 +127,14 @@ def identify_commodity(text):
 def get_pairs_for_commodity(commodity):
     """Get trading pairs for the commodity"""
     mapping = {
-        "gold": ["XAUUSDT"],
+        "gold": ["XAUUSDT", "XAUTUSDT"],
         "silver": ["XAGUSDT"],
         "oil": ["GASUSDT"],
+        "natural gas": ["GASUSDT"],
+        "bitcoin": ["BTCUSDT"],
+        "crypto": ["BTCUSDT", "ETHUSDT"],
     }
-    return mapping.get(commodity, ["XAUUSDT"])
+    return mapping.get(commodity, ["XAUUSDT", "BTCUSDT"])
 
 
 def load_credentials():
