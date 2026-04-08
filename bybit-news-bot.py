@@ -16,31 +16,45 @@ import sys
 from datetime import datetime
 from pathlib import Path
 
-# News sources
+# News sources - OPTIMIZED for OIL & GOLD
 NEWS_SOURCES = [
+    {"name": "OilPrice", "url": "https://oilprice.com/"},
     {"name": "BBC Business", "url": "https://www.bbc.com/news/business"},
-    {"name": "CNBC", "url": "https://www.cnbc.com/investing/"},
+    {"name": "MarketWatch Commodities", "url": "https://www.marketwatch.com/investing/commodities"},
     {"name": "Yahoo Finance", "url": "https://finance.yahoo.com/topic/markets/"},
 ]
 
 # Focus pairs
 TRADING_PAIRS = ["XAUUSDT", "XAGUSDT", "GASUSDT"]
 
-# Keywords - use word boundaries for accuracy
+# Keywords - EXPANDED for OIL & GOLD
 GOLD_KEYWORDS = [
     "gold", "xau", "bullion", "goldman sachs gold", "gold price", "gold up", "gold down",
     "gold surge", "gold falls", "gold rally", "gold gains", "gold losses",
-    "safe haven", "gold etf"
+    "safe haven", "gold etf", "gold futures", "gold mining", "gold stocks",
+    "gold ounces", "gold bars", "gold coin", "spot gold", "gold market",
+    "inflation hedge", "gold demand", "gold supply", "central bank gold",
+    "palladium", "platinum", "precious metals"
 ]
 
 SILVER_KEYWORDS = [
-    "silver", "xag", "silver price", "silver up", "silver down", "silver surge"
+    "silver", "xag", "silver price", "silver up", "silver down", "silver surge",
+    "silver rally", "silver futures", "silver mining", "silver demand"
 ]
 
 OIL_KEYWORDS = [
+    # Basic
     "oil", "opec", "crude", "wti", "brent", "petroleum", "energy", "natural gas",
     "iran", "straits", "hormuz", "oil price", "oil up", "oil down",
-    "oil surge", "oil plunges", "oil spike", "fuel"
+    "oil surge", "oil plunges", "oil spike", "fuel",
+    # Expanded
+    "opec+", "opec plus", "saudi", "russia oil", "oil production", "oil supply",
+    "oil demand", "oil inventory", "oil reserves", "oil exports",
+    "gasoline", "diesel", "jet fuel", "heating oil", "refining",
+    "pipeline", "oil tanker", "oil rig", "shale", "fracking",
+    "national average gas", "gas prices", "pump price", "fuel prices",
+    "electric vehicle", "ev demand", "battery", "lithium",
+    "energy crisis", "energy prices", "power crisis", "electricity prices"
 ]
 
 BULLISH_KEYWORDS = [
