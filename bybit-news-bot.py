@@ -63,6 +63,13 @@ SILVER_KEYWORDS = [
     "silver rally", "silver futures", "silver mining", "silver demand"
 ]
 
+CRYPTO_KEYWORDS = [
+    "bitcoin", "btc", "ethereum", "eth", "crypto", "cryptocurrency",
+    "solana", "sol", "dogecoin", "doge", "xrp", "ripple", "cardano", "ada",
+    "sec", "cftc", "regulation", "etf", "bitcoin etf", "现货etf",
+    "nvidia", "ai", "artificial intelligence", "tech earnings"
+]
+
 OIL_KEYWORDS = [
     # Basic
     "oil", "opec", "crude", "wti", "brent", "petroleum", "energy", "natural gas",
