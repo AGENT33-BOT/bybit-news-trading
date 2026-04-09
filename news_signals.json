@@ -1,34 +1,34 @@
 {
-  "timestamp": "2026-04-09T07:30:56.988290",
+  "timestamp": "2026-04-09T07:49:13.942106",
   "trades": [
     {
       "pair": "GASUSDT",
       "direction": "BULLISH",
-      "price": 1.744,
+      "price": 1.7503,
       "commodity": "oil",
       "reason": "Tehran Takes the Strait \u2014 and the PremiumIran sustained oil "
     },
     {
       "pair": "GASUSDT",
       "direction": "BULLISH",
-      "price": 1.744,
+      "price": 1.7503,
       "commodity": "oil",
       "reason": "Petrol and diesel prices rise again as concerns grow over ce"
     },
     {
       "pair": "GASUSDT",
       "direction": "BULLISH",
-      "price": 1.744,
+      "price": 1.7503,
       "commodity": "oil",
       "reason": "Indian migrant workers hit by cooking gas shortages are leav"
     }
   ],
   "prices": {
-    "XAUUSDT": 4747.94,
-    "XAUTUSDT": 4721.8,
-    "XAGUSDT": 74.33,
-    "GASUSDT": 1.744,
-    "BTCUSDT": 71067.4,
-    "ETHUSDT": 2179.4
+    "XAUUSDT": 4757.69,
+    "XAUTUSDT": 4730.9,
+    "XAGUSDT": 74.55,
+    "GASUSDT": 1.7503,
+    "BTCUSDT": 71185.0,
+    "ETHUSDT": 2181.43
   }
 }
