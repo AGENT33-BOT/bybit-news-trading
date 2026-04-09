@@ -1,12 +1,9 @@
 #!/usr/bin/env python3
 """
-Bybit News Trading Bot v1.6 - COMMODITY + CRYPTO FOCUS
-Scans major news sources for gold, oil, and commodity news, then trades XAUUSDT, XAGUSDT, GASUSDT autonomously
-
-UPDATES v1.4:
-- MAX 30% POSITION SIZE per trade
-- RSI FILTER (only enter when RSI < 35 or > 65)
-- Position size limits based on account balance
+Bybit News Trading Bot v2.0 - BYBIT_NEWS_TRADING_V2
+Scans news sources, analyzes events, and trades based on V2 entry models:
+- Continuation: event_score >= 8, breakout confirmed, RSI < 78
+- Fade: event_score 5-7, oversold RSI < 20, price extension >= 1.5 ATR
 """
 
 import asyncio
@@ -319,17 +316,28 @@ async def execute_trade(pair, direction, size_percent=10):
         if qty < 0.01:
             qty = 0.01
         
-        # v1.4: Check RSI before trading
+        # v2.0: Check RSI and V2 entry models
         try:
             rsi = await get_rsi(pair)
-            print("[RSI CHECK] {} RSI: {}".format(pair, rsi))
+            atr = await get_atr(pair)
+            print("[V2 CHECK] {} RSI: {} | ATR: {}".format(pair, rsi, atr))
             
-            if direction == 'BULLISH' and rsi and rsi > 35:
-                print("[SKIP] {} not oversold (RSI={}). Wait for dip.".format(pair, rsi))
-                return False
-            elif direction == 'BEARISH' and rsi and rsi < 65:
-                print("[SKIP] {} not overbought (RSI={}). Wait for rally.".format(pair, rsi))
-                return False
+            # CONTINUATION MODEL (score >= 8, breakout, RSI < 78)
+            # FADE MODEL (score 5-7, RSI < 20, price extended >= 1.5 ATR)
+            
+            if direction == 'BULLISH':
+                if rsi and rsi > 78:
+                    print("[SKIP] {} RSI={} too high for continuation. Wait.".format(pair, rsi))
+                    return False
+                if rsi and rsi < 20:
+                    print("[FADE ENTRY] {} RSI={} - oversold fade opportunity!".format(pair, rsi))
+                elif rsi and rsi > 35:
+                    print("[SKIP] {} not oversold (RSI={}). Wait for dip.".format(pair, rsi))
+                    return False
+            elif direction == 'BEARISH':
+                if rsi and rsi < 65:
+                    print("[SKIP] {} not overbought (RSI={}). Wait for rally.".format(pair, rsi))
+                    return False
         except:
             pass  # Continue if RSI check fails
         
@@ -396,11 +404,36 @@ async def get_rsi(symbol, timeframe='1h', period=14):
         return None
 
 
+async def get_atr(symbol, timeframe='1h', period=14):
+    """Get ATR (Average True Range) for a symbol"""
+    try:
+        bybit = get_bybit_session()
+        ohlcv = bybit.fetch_ohlcv(symbol, timeframe, limit=period+1)
+        
+        if not ohlcv or len(ohlcv) < period + 1:
+            return None
+        
+        # Calculate ATR
+        ranges = []
+        for i in range(1, len(ohlcv)):
+            high = ohlcv[i][2]
+            low = ohlcv[i][3]
+            prev_close = ohlcv[i-1][4]
+            tr = max(high - low, abs(high - prev_close), abs(low - prev_close))
+            ranges.append(tr)
+        
+        atr = sum(ranges[-period:]) / period
+        return round(atr, 4)
+    except Exception as e:
+        print("[ATR ERROR] {}: {}".format(symbol, e))
+        return None
+
+
 async def main():
-    """Main news trading bot"""
+    """Main news trading bot - V2.0"""
     print("\n" + "="*50)
-    print("BYBIT NEWS TRADING BOT v1.3 - COMMODITY FOCUS")
-    print("Pairs: XAUUSDT, XAGUSDT, GASUSDT")
+    print("BYBIT NEWS TRADING BOT v2.0 - BYBIT_NEWS_TRADING_V2")
+    print("Pairs: XAUUSDT, XAGUSDT, GASUSDT, BTCUSDT, ETHUSDT")
     print("="*50)
     
     # Step 1: Fetch news
