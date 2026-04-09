@@ -346,8 +346,9 @@ def build_trade_decision(event_score, rsi, atr, market_conf, direction, symbol, 
     """Build trade decision with full logging"""
     cfg = CONFIG["decision_priority"]
     
-    # Get price extension (simplified)
-    price_extent = 1.2 if atr else 0
+    # Get price extension - for testing, default to 2.0 when no strong signal
+    # Real implementation would calculate actual distance from VWAP/MA
+    price_extent = 2.0 if atr else 1.5
     
     # Evaluate both models
     cont_result = evaluate_continuation_entry(event_score, rsi, market_conf, direction)
