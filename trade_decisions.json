@@ -1,0 +1,542 @@
+[
+  {
+    "timestamp": "2026-04-09T08:46:52.467032",
+    "symbol": "GASUSDT",
+    "headline": "Tehran Takes the Strait \u2014 and the PremiumIran sustained oil exports at 1.9 milli",
+    "source": "OilPrice",
+    "direction": "BULLISH",
+    "event_score": 6.0,
+    "rsi": 64.68,
+    "atr": 0.0244,
+    "breakout_confirmed": true,
+    "breakdown_confirmed": false,
+    "volume_confirmed": true,
+    "spread_ok": true,
+    "overextended": false,
+    "continuation_eligible": false,
+    "fade_eligible": false,
+    "continuation_confidence": 0,
+    "fade_confidence": 0,
+    "continuation_fail_reasons": [
+      "event_score_below_min"
+    ],
+    "fade_fail_reasons": [
+      "not_oversold"
+    ],
+    "final_action": "SKIP",
+    "chosen_entry_model": "none"
+  },
+  {
+    "timestamp": "2026-04-09T08:47:09.355087",
+    "symbol": "GASUSDT",
+    "headline": "How China Positioned Itself to Win the Global Energy CrisisChina's years-long bu",
+    "source": "OilPrice",
+    "direction": "BULLISH",
+    "event_score": 6.0,
+    "rsi": 64.34,
+    "atr": 0.0244,
+    "breakout_confirmed": true,
+    "breakdown_confirmed": false,
+    "volume_confirmed": true,
+    "spread_ok": true,
+    "overextended": false,
+    "continuation_eligible": false,
+    "fade_eligible": false,
+    "continuation_confidence": 0,
+    "fade_confidence": 0,
+    "continuation_fail_reasons": [
+      "event_score_below_min"
+    ],
+    "fade_fail_reasons": [
+      "not_oversold"
+    ],
+    "final_action": "SKIP",
+    "chosen_entry_model": "none"
+  },
+  {
+    "timestamp": "2026-04-09T08:47:22.850690",
+    "symbol": "GASUSDT",
+    "headline": "$2B Investment Drives Expansion of U.S.-Canada Oil FlowsBridger Pipeline LLC pla",
+    "source": "OilPrice",
+    "direction": "BULLISH",
+    "event_score": 6.0,
+    "rsi": 64.73,
+    "atr": 0.0244,
+    "breakout_confirmed": true,
+    "breakdown_confirmed": false,
+    "volume_confirmed": true,
+    "spread_ok": true,
+    "overextended": false,
+    "continuation_eligible": false,
+    "fade_eligible": false,
+    "continuation_confidence": 0,
+    "fade_confidence": 0,
+    "continuation_fail_reasons": [
+      "event_score_below_min"
+    ],
+    "fade_fail_reasons": [
+      "not_oversold"
+    ],
+    "final_action": "SKIP",
+    "chosen_entry_model": "none"
+  },
+  {
+    "timestamp": "2026-04-09T08:47:37.043218",
+    "symbol": "GASUSDT",
+    "headline": "Oil Rally Accelerates as Traders Price in Real Supply Disruption",
+    "source": "OilPrice",
+    "direction": "BULLISH",
+    "event_score": 6.5,
+    "rsi": 64.47,
+    "atr": 0.0244,
+    "breakout_confirmed": true,
+    "breakdown_confirmed": false,
+    "volume_confirmed": true,
+    "spread_ok": true,
+    "overextended": false,
+    "continuation_eligible": false,
+    "fade_eligible": false,
+    "continuation_confidence": 0,
+    "fade_confidence": 0,
+    "continuation_fail_reasons": [
+      "event_score_below_min"
+    ],
+    "fade_fail_reasons": [
+      "not_oversold"
+    ],
+    "final_action": "SKIP",
+    "chosen_entry_model": "none"
+  },
+  {
+    "timestamp": "2026-04-09T08:47:49.983840",
+    "symbol": "GASUSDT",
+    "headline": "The Biggest Oil Disruption in History Is Accelerating the Energy Transition",
+    "source": "OilPrice",
+    "direction": "BULLISH",
+    "event_score": 6.0,
+    "rsi": 64.38,
+    "atr": 0.0244,
+    "breakout_confirmed": true,
+    "breakdown_confirmed": false,
+    "volume_confirmed": true,
+    "spread_ok": true,
+    "overextended": false,
+    "continuation_eligible": false,
+    "fade_eligible": false,
+    "continuation_confidence": 0,
+    "fade_confidence": 0,
+    "continuation_fail_reasons": [
+      "event_score_below_min"
+    ],
+    "fade_fail_reasons": [
+      "not_oversold"
+    ],
+    "final_action": "SKIP",
+    "chosen_entry_model": "none"
+  },
+  {
+    "timestamp": "2026-04-09T08:48:04.625849",
+    "symbol": "GASUSDT",
+    "headline": "The Biggest Oil Disruption in History Is Accelerating the Energy Transition",
+    "source": "OilPrice",
+    "direction": "BULLISH",
+    "event_score": 6.0,
+    "rsi": 64.38,
+    "atr": 0.0244,
+    "breakout_confirmed": true,
+    "breakdown_confirmed": false,
+    "volume_confirmed": true,
+    "spread_ok": true,
+    "overextended": false,
+    "continuation_eligible": false,
+    "fade_eligible": false,
+    "continuation_confidence": 0,
+    "fade_confidence": 0,
+    "continuation_fail_reasons": [
+      "event_score_below_min"
+    ],
+    "fade_fail_reasons": [
+      "not_oversold"
+    ],
+    "final_action": "SKIP",
+    "chosen_entry_model": "none"
+  },
+  {
+    "timestamp": "2026-04-09T08:48:18.863956",
+    "symbol": "GASUSDT",
+    "headline": "Energy Stocks Surged 38% in Q1 While the Rest of the Market Fell",
+    "source": "OilPrice",
+    "direction": "BULLISH",
+    "event_score": 6.0,
+    "rsi": 64.94,
+    "atr": 0.0244,
+    "breakout_confirmed": true,
+    "breakdown_confirmed": false,
+    "volume_confirmed": true,
+    "spread_ok": true,
+    "overextended": false,
+    "continuation_eligible": false,
+    "fade_eligible": false,
+    "continuation_confidence": 0,
+    "fade_confidence": 0,
+    "continuation_fail_reasons": [
+      "event_score_below_min"
+    ],
+    "fade_fail_reasons": [
+      "not_oversold"
+    ],
+    "final_action": "SKIP",
+    "chosen_entry_model": "none"
+  },
+  {
+    "timestamp": "2026-04-09T08:48:36.866404",
+    "symbol": "GASUSDT",
+    "headline": "Energy Stocks Surged 38% in Q1 While the Rest of the Market Fell",
+    "source": "OilPrice",
+    "direction": "BULLISH",
+    "event_score": 6.0,
+    "rsi": 64.68,
+    "atr": 0.0244,
+    "breakout_confirmed": true,
+    "breakdown_confirmed": false,
+    "volume_confirmed": true,
+    "spread_ok": true,
+    "overextended": false,
+    "continuation_eligible": false,
+    "fade_eligible": false,
+    "continuation_confidence": 0,
+    "fade_confidence": 0,
+    "continuation_fail_reasons": [
+      "event_score_below_min"
+    ],
+    "fade_fail_reasons": [
+      "not_oversold"
+    ],
+    "final_action": "SKIP",
+    "chosen_entry_model": "none"
+  },
+  {
+    "timestamp": "2026-04-09T08:48:53.056401",
+    "symbol": "GASUSDT",
+    "headline": "Indian migrant workers hit by cooking gas shortages are leaving citiesMigrant wo",
+    "source": "BBC Business",
+    "direction": "BULLISH",
+    "event_score": 5.5,
+    "rsi": 64.68,
+    "atr": 0.0244,
+    "breakout_confirmed": true,
+    "breakdown_confirmed": false,
+    "volume_confirmed": true,
+    "spread_ok": true,
+    "overextended": false,
+    "continuation_eligible": false,
+    "fade_eligible": false,
+    "continuation_confidence": 0,
+    "fade_confidence": 0,
+    "continuation_fail_reasons": [
+      "event_score_below_min"
+    ],
+    "fade_fail_reasons": [
+      "not_oversold"
+    ],
+    "final_action": "SKIP",
+    "chosen_entry_model": "none"
+  },
+  {
+    "timestamp": "2026-04-09T08:49:09.453263",
+    "symbol": "GASUSDT",
+    "headline": "Reports of a US peace plan for Iran send oil prices lower",
+    "source": "BBC Business",
+    "direction": "BEARISH",
+    "event_score": 5.5,
+    "rsi": 64.68,
+    "atr": 0.0244,
+    "breakout_confirmed": false,
+    "breakdown_confirmed": true,
+    "volume_confirmed": true,
+    "spread_ok": true,
+    "overextended": false,
+    "continuation_eligible": false,
+    "fade_eligible": false,
+    "continuation_confidence": 0,
+    "fade_confidence": 0,
+    "continuation_fail_reasons": [
+      "event_score_below_min"
+    ],
+    "fade_fail_reasons": [
+      "not_overbought"
+    ],
+    "final_action": "SKIP",
+    "chosen_entry_model": "none"
+  },
+  {
+    "timestamp": "2026-04-09T08:49:23.806008",
+    "symbol": "GASUSDT",
+    "headline": "Brent Crude tumbles as Trump trails easing pressure on Iran",
+    "source": "BBC Business",
+    "direction": "BEARISH",
+    "event_score": 5.5,
+    "rsi": 64.68,
+    "atr": 0.0244,
+    "breakout_confirmed": false,
+    "breakdown_confirmed": true,
+    "volume_confirmed": true,
+    "spread_ok": true,
+    "overextended": false,
+    "continuation_eligible": false,
+    "fade_eligible": false,
+    "continuation_confidence": 0,
+    "fade_confidence": 0,
+    "continuation_fail_reasons": [
+      "event_score_below_min"
+    ],
+    "fade_fail_reasons": [
+      "not_overbought"
+    ],
+    "final_action": "SKIP",
+    "chosen_entry_model": "none"
+  },
+  {
+    "timestamp": "2026-04-09T08:49:37.551440",
+    "symbol": "GASUSDT",
+    "headline": "Wall Street opens down as oil prices climb",
+    "source": "BBC Business",
+    "direction": "BEARISH",
+    "event_score": 5.5,
+    "rsi": 64.68,
+    "atr": 0.0244,
+    "breakout_confirmed": false,
+    "breakdown_confirmed": true,
+    "volume_confirmed": true,
+    "spread_ok": true,
+    "overextended": false,
+    "continuation_eligible": false,
+    "fade_eligible": false,
+    "continuation_confidence": 0,
+    "fade_confidence": 0,
+    "continuation_fail_reasons": [
+      "event_score_below_min"
+    ],
+    "fade_fail_reasons": [
+      "not_overbought"
+    ],
+    "final_action": "SKIP",
+    "chosen_entry_model": "none"
+  },
+  {
+    "timestamp": "2026-04-09T08:49:54.110847",
+    "symbol": "GASUSDT",
+    "headline": "Will UK petrol and diesel prices start going down?UK petrol prices have risen be",
+    "source": "BBC Business",
+    "direction": "BEARISH",
+    "event_score": 5.5,
+    "rsi": 62.93,
+    "atr": 0.0244,
+    "breakout_confirmed": false,
+    "breakdown_confirmed": true,
+    "volume_confirmed": true,
+    "spread_ok": true,
+    "overextended": false,
+    "continuation_eligible": false,
+    "fade_eligible": false,
+    "continuation_confidence": 0,
+    "fade_confidence": 0,
+    "continuation_fail_reasons": [
+      "event_score_below_min"
+    ],
+    "fade_fail_reasons": [
+      "not_overbought"
+    ],
+    "final_action": "SKIP",
+    "chosen_entry_model": "none"
+  },
+  {
+    "timestamp": "2026-04-09T08:50:08.726119",
+    "symbol": "GASUSDT",
+    "headline": "UK farmers warn Iran ceasefire too late to stop higher food costsDespite a cease",
+    "source": "BBC Business",
+    "direction": "BULLISH",
+    "event_score": 5.5,
+    "rsi": 62.93,
+    "atr": 0.0244,
+    "breakout_confirmed": true,
+    "breakdown_confirmed": false,
+    "volume_confirmed": true,
+    "spread_ok": true,
+    "overextended": false,
+    "continuation_eligible": false,
+    "fade_eligible": false,
+    "continuation_confidence": 0,
+    "fade_confidence": 0,
+    "continuation_fail_reasons": [
+      "event_score_below_min"
+    ],
+    "fade_fail_reasons": [
+      "not_oversold"
+    ],
+    "final_action": "SKIP",
+    "chosen_entry_model": "none"
+  },
+  {
+    "timestamp": "2026-04-09T08:50:22.678294",
+    "symbol": "GASUSDT",
+    "headline": "UK farmers warn Iran ceasefire too late to stop higher food costs",
+    "source": "BBC Business",
+    "direction": "BULLISH",
+    "event_score": 5.5,
+    "rsi": 63.14,
+    "atr": 0.0244,
+    "breakout_confirmed": true,
+    "breakdown_confirmed": false,
+    "volume_confirmed": true,
+    "spread_ok": true,
+    "overextended": false,
+    "continuation_eligible": false,
+    "fade_eligible": false,
+    "continuation_confidence": 0,
+    "fade_confidence": 0,
+    "continuation_fail_reasons": [
+      "event_score_below_min"
+    ],
+    "fade_fail_reasons": [
+      "not_oversold"
+    ],
+    "final_action": "SKIP",
+    "chosen_entry_model": "none"
+  },
+  {
+    "timestamp": "2026-04-09T08:50:37.759097",
+    "symbol": "GASUSDT",
+    "headline": "Oil prices plunge and shares jump on US-Iran ceasefire planCrude prices tumbled ",
+    "source": "BBC Business",
+    "direction": "BULLISH",
+    "event_score": 5.5,
+    "rsi": 63.14,
+    "atr": 0.0244,
+    "breakout_confirmed": true,
+    "breakdown_confirmed": false,
+    "volume_confirmed": true,
+    "spread_ok": true,
+    "overextended": false,
+    "continuation_eligible": false,
+    "fade_eligible": false,
+    "continuation_confidence": 0,
+    "fade_confidence": 0,
+    "continuation_fail_reasons": [
+      "event_score_below_min"
+    ],
+    "fade_fail_reasons": [
+      "not_oversold"
+    ],
+    "final_action": "SKIP",
+    "chosen_entry_model": "none"
+  },
+  {
+    "timestamp": "2026-04-09T08:50:53.502959",
+    "symbol": "GASUSDT",
+    "headline": "Airlines cut flights and hike fares as fuel prices surgeAirlines have reduced se",
+    "source": "BBC Business",
+    "direction": "BULLISH",
+    "event_score": 5.5,
+    "rsi": 63.14,
+    "atr": 0.0244,
+    "breakout_confirmed": true,
+    "breakdown_confirmed": false,
+    "volume_confirmed": true,
+    "spread_ok": true,
+    "overextended": false,
+    "continuation_eligible": false,
+    "fade_eligible": false,
+    "continuation_confidence": 0,
+    "fade_confidence": 0,
+    "continuation_fail_reasons": [
+      "event_score_below_min"
+    ],
+    "fade_fail_reasons": [
+      "not_oversold"
+    ],
+    "final_action": "SKIP",
+    "chosen_entry_model": "none"
+  },
+  {
+    "timestamp": "2026-04-09T08:51:07.728122",
+    "symbol": "GASUSDT",
+    "headline": "Airlines cut flights and hike fares as fuel prices surge",
+    "source": "BBC Business",
+    "direction": "BULLISH",
+    "event_score": 5.5,
+    "rsi": 62.69,
+    "atr": 0.0244,
+    "breakout_confirmed": true,
+    "breakdown_confirmed": false,
+    "volume_confirmed": true,
+    "spread_ok": true,
+    "overextended": false,
+    "continuation_eligible": false,
+    "fade_eligible": false,
+    "continuation_confidence": 0,
+    "fade_confidence": 0,
+    "continuation_fail_reasons": [
+      "event_score_below_min"
+    ],
+    "fade_fail_reasons": [
+      "not_oversold"
+    ],
+    "final_action": "SKIP",
+    "chosen_entry_model": "none"
+  },
+  {
+    "timestamp": "2026-04-09T08:51:21.114119",
+    "symbol": "GASUSDT",
+    "headline": "6 days agoUS jobs surge unexpectedly in March despite Iran warEmployers added 17",
+    "source": "BBC Business",
+    "direction": "BULLISH",
+    "event_score": 5.5,
+    "rsi": 62.69,
+    "atr": 0.0244,
+    "breakout_confirmed": true,
+    "breakdown_confirmed": false,
+    "volume_confirmed": true,
+    "spread_ok": true,
+    "overextended": false,
+    "continuation_eligible": false,
+    "fade_eligible": false,
+    "continuation_confidence": 0,
+    "fade_confidence": 0,
+    "continuation_fail_reasons": [
+      "event_score_below_min"
+    ],
+    "fade_fail_reasons": [
+      "not_oversold"
+    ],
+    "final_action": "SKIP",
+    "chosen_entry_model": "none"
+  },
+  {
+    "timestamp": "2026-04-09T08:51:35.681301",
+    "symbol": "GASUSDT",
+    "headline": "US jobs surge unexpectedly in March despite Iran war",
+    "source": "BBC Business",
+    "direction": "BULLISH",
+    "event_score": 5.5,
+    "rsi": 62.69,
+    "atr": 0.0244,
+    "breakout_confirmed": true,
+    "breakdown_confirmed": false,
+    "volume_confirmed": true,
+    "spread_ok": true,
+    "overextended": false,
+    "continuation_eligible": false,
+    "fade_eligible": false,
+    "continuation_confidence": 0,
+    "fade_confidence": 0,
+    "continuation_fail_reasons": [
+      "event_score_below_min"
+    ],
+    "fade_fail_reasons": [
+      "not_oversold"
+    ],
+    "final_action": "SKIP",
+    "chosen_entry_model": "none"
+  }
+]
